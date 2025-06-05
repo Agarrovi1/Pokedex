@@ -85,4 +85,5 @@ struct Pokemon: Codable {
         }
     }
     
+    static let example = Pokemon(abilities: [.init(ability: .init(name: "overgrow", isHidden: false)), .init(ability: .init(name: "chlorophyll", isHidden: true))], id: 1, moves: [.init(move: .init(name: "razor-wind", url: "https://pokeapi.co/api/v2/move/13/"))], types: [.init(slot: 1, type: .init(name: "grass")), .init(slot: 2, type: .init(name: "poison"))], stats: [.init(base_stat: 45, stat: .init(name: "hp"))], name: "bulbasaur", sprites: .init(frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", frontShiny: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png"))
 }
