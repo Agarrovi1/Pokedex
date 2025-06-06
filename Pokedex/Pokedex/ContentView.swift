@@ -11,23 +11,30 @@ struct ContentView: View {
     @State private var pokemonList: PokemonList = PokemonList()
     @State private var currentPokemon: [Pokemon] = []
     var body: some View {
-        ScrollView {
-            PokedexListView(pokemon: currentPokemon)
-                .onChange(of: pokemonList.results) { oldValue, newValue in
-                    Task {
-                        await currentPokemon = pokemonList.getPokemon()
+        NavigationView {
+            ScrollView {
+                PokedexListView(pokemon: currentPokemon)
+                    .onChange(of: pokemonList.results) { oldValue, newValue in
+                        Task {
+                            await currentPokemon = pokemonList.getPokemon()
+                        }
                     }
-                }
-                
+                    .background(Color(UIColor(red: 0.20, green: 0.80, blue: 1, alpha: 1)))
+                    
+            }
+            .padding()
+            .background(.red)
+            .border(.black, width: 15)
+            .opacity(0.8)
+            .navigationTitle("Pokedex")
         }
-        .padding()
-        .background(Color(UIColor(red: 0.20, green: 0.80, blue: 1, alpha: 1)))
-        .opacity(0.8)
+        .foregroundStyle(.primary)
         .onAppear() {
             Task {
                 await loadPokemonList()
             }
         }
+        
         
     }
     func loadPokemonList() async {
