@@ -29,6 +29,12 @@ struct PokemonView: View {
                         
                         Text("#\(pokemon.id) \(pokemon.name.capitalized)")
                             .font(.title)
+                        
+                        HStack {
+                            ForEach(pokemon.types, id: \.slot) { type in
+                                TypeCapsuleView(type: type)
+                            }
+                        }
                         Divider()
                         Text("Moves")
                             .font(.title2)
