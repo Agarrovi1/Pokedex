@@ -41,7 +41,6 @@ struct ContentView: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? decoder.decode(PokemonList.self, from: data) {
                 pokemonList = decodedResponse
-                print("got pokemon")
             } else {
                 print("problem with decodedResponse")
             }
