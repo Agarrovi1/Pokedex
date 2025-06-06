@@ -9,21 +9,41 @@ import SwiftUI
 
 struct PokemonView: View {
     var pokemon: Pokemon
+    
     var body: some View {
         ZStack {
-            Color(UIColor(red: 0, green: 0.90, blue: 1, alpha: 1))
-            VStack {
-                AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200)
-                } placeholder: {
-                    ProgressView()
+            Color.red
+                .ignoresSafeArea()
+            ScrollView(.vertical) {
+                ZStack {
+                    Color(UIColor(red: 0, green: 0.90, blue: 1, alpha: 1))
+                    LazyVStack {
+                        AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 200, height: 200)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        
+                        Text("#\(pokemon.id) \(pokemon.name.capitalized)")
+                            .font(.title)
+                        Divider()
+                        Text("Moves")
+                            .font(.title2)
+                        ForEach(pokemon.moves, id: \.move.name) { move in
+                            Text(move.getMoveName().capitalized)
+                        }
+                        Divider()
+                    }
                 }
-                
-                Text(pokemon.name.capitalized)
             }
+            .containerRelativeFrame(.vertical) { size, axis in
+                size * 0.9
+            }
+            .background(Color(UIColor(red: 0, green: 0.90, blue: 1, alpha: 1)))
+            .border(.black, width: 10)
         }
     }
 }
