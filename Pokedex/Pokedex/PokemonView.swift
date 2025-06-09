@@ -36,12 +36,16 @@ struct PokemonView: View {
                             }
                         }
                         Divider()
-                        Text("Moves")
+                        Text("Learnable Moves")
                             .font(.title2)
                         ForEach(pokemon.moves, id: \.move.name) { move in
                             Text(move.getMoveName().capitalized)
                         }
                         Divider()
+                        
+                        Text("Stats")
+                            .font(.title2)
+                        StatView(pokemonStats: pokemon.stats)
                     }
                 }
             }
