@@ -29,10 +29,24 @@ struct ContentView: View {
                 .opacity(0.8)
                 .navigationTitle("Pokedex")
                 
-                Button("Next", systemImage: "arrow.right") {
-                    Task {
-                        await loadNextPokemonList()
+                HStack {
+                    Button("Previous", systemImage: "arrow.left") {
+                        
                     }
+                    .padding(.leading)
+                    .disabled(pokemonList.previous == nil)
+                    .foregroundStyle(pokemonList.previous == nil ? .secondary : .primary)
+                    
+                    Spacer()
+                    
+                    Button("Next", systemImage: "arrow.right") {
+                        Task {
+                            await loadNextPokemonList()
+                        }
+                    }
+                    .padding(.trailing)
+                    .disabled(pokemonList.next == nil)
+                    .foregroundStyle(pokemonList.next == nil ? .secondary : .primary)
                 }
             }
             .background(.red)
@@ -68,6 +82,24 @@ struct ContentView: View {
         let urlString = pokemonList.next ?? ""
         guard let url = URL(string: urlString) else {
             print("failed to get url for next pokemon list")
+            return
+        }
+        do {
+            let decoder = JSONDecoder()
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let decodedResponse = try? decoder.decode(PokemonList.self, from: data) {
+                pokemonList = decodedResponse
+            } else {
+                print("problem with decodedResponse")
+            }
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
+    }
+    func loadPrevPokemonList() async {
+        let urlString = pokemonList.previous ?? ""
+        guard let url = URL(string: urlString) else {
+            print("failed to get url for previous pokemon list")
             return
         }
         do {
