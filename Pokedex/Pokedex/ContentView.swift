@@ -12,21 +12,30 @@ struct ContentView: View {
     @State private var currentPokemon: [Pokemon] = []
     var body: some View {
         NavigationView {
-            ScrollView {
-                PokedexListView(pokemon: currentPokemon)
-                    .onChange(of: pokemonList.results) { oldValue, newValue in
-                        Task {
-                            await currentPokemon = pokemonList.getPokemon()
+            VStack {
+                ScrollView {
+                    PokedexListView(pokemon: currentPokemon)
+                        .onChange(of: pokemonList.results) { oldValue, newValue in
+                            Task {
+                                await currentPokemon = pokemonList.getPokemon()
+                            }
                         }
-                    }
-                    .background(Color(UIColor(red: 0.20, green: 0.80, blue: 1, alpha: 1)))
+                        .background(Color(UIColor(red: 0.20, green: 0.80, blue: 1, alpha: 1)))
                     
+                }
+                .padding()
+                .background(.red)
+                .border(.black, width: 15)
+                .opacity(0.8)
+                .navigationTitle("Pokedex")
+                
+                Button("Next", systemImage: "arrow.right") {
+                    Task {
+                        await loadNextPokemonList()
+                    }
+                }
             }
-            .padding()
             .background(.red)
-            .border(.black, width: 15)
-            .opacity(0.8)
-            .navigationTitle("Pokedex")
         }
         .foregroundStyle(.primary)
         .onAppear() {
@@ -41,6 +50,24 @@ struct ContentView: View {
         let urlString = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
         guard let url = URL(string: urlString) else {
             print("failed to get url")
+            return
+        }
+        do {
+            let decoder = JSONDecoder()
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let decodedResponse = try? decoder.decode(PokemonList.self, from: data) {
+                pokemonList = decodedResponse
+            } else {
+                print("problem with decodedResponse")
+            }
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
+    }
+    func loadNextPokemonList() async {
+        let urlString = pokemonList.next ?? ""
+        guard let url = URL(string: urlString) else {
+            print("failed to get url for next pokemon list")
             return
         }
         do {
