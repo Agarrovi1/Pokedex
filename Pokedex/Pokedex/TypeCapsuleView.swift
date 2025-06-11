@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TypeCapsuleView: View {
+    var lightTypes: Set<String> = ["ice", "electric"]
     var type: Pokemon.TypeWrapper
     var body: some View {
         ZStack {
@@ -15,7 +16,7 @@ struct TypeCapsuleView: View {
                 .fill(getColorFrom(type: type.getTypeName()))
                 .frame(maxWidth: 120, maxHeight: 60)
             Text(type.getTypeName().capitalized)
-                .foregroundStyle(type.getTypeName() == "ice" ? .black : .white)
+                .foregroundStyle(lightTypes.contains(type.getTypeName()) ? .black : .white)
                 .fontWeight(.bold)
             //            .padding()
             //            .background(getColorFrom(type: type.getTypeName()), in: Capsule())
@@ -26,5 +27,5 @@ struct TypeCapsuleView: View {
 }
 
 #Preview {
-    TypeCapsuleView(type: Pokemon.TypeWrapper.init(slot: 1, type: Pokemon.TypeWrapper.PokeType.init(name: "grass")))
+    TypeCapsuleView(type: Pokemon.TypeWrapper.init(slot: 1, type: Pokemon.TypeWrapper.PokeType.init(name: "electric")))
 }
