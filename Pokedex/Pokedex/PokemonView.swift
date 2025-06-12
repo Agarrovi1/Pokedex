@@ -36,8 +36,37 @@ struct PokemonView: View {
                             }
                         }
                         Divider()
+                        VStack {
+                            Text(pokemon.getAbilities().count > 1 ? "Abilities" : "Ability")
+                                .font(.title2)
+                                .bold()
+                            if pokemon.getAbilities().isEmpty {
+                                Text("None")
+                            } else {
+                                ForEach(pokemon.getAbilities(), id: \.ability.name) { hiddenAbility in
+                                    Text(hiddenAbility.ability.name.capitalized)
+                                }
+                                .padding(.bottom)
+                            }
+                            
+                            
+                            Text(pokemon.getHiddenAbilities().count > 1 ? "Hidden Abilities" : "Hidden Ability")
+                                .font(.title2)
+                                .bold()
+                            if pokemon.getHiddenAbilities().isEmpty {
+                                Text("None")
+                            } else {
+                                ForEach(pokemon.getHiddenAbilities(), id: \.ability.name) { hiddenAbility in
+                                    Text(hiddenAbility.ability.name.capitalized)
+                                }
+                            }
+                            
+                        }
+                        
+                        Divider()
                         Text("Learnable Moves")
                             .font(.title2)
+                            .bold()
                         ForEach(pokemon.moves, id: \.move.name) { move in
                             Text(move.getMoveName().capitalized)
                         }
@@ -45,6 +74,7 @@ struct PokemonView: View {
                         
                         Text("Stats")
                             .font(.title2)
+                            .bold()
                         StatView(pokemonStats: pokemon.stats)
                     }
                 }

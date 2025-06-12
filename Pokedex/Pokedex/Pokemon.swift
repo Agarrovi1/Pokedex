@@ -70,20 +70,24 @@ struct Pokemon: Codable {
     
     struct AbilityWrapper: Codable {
         let ability: Ability
-        func getAbilityInfo() -> (name:String,isHidden:Bool) {
-            return(self.ability.name,self.ability.isHidden ?? false)
+        let isHidden: Bool
+
+        private enum CodingKeys: String,CodingKey {
+            case ability
+            case isHidden = "is_hidden"
         }
         
         struct Ability: Codable {
             let name: String
-            let isHidden: Bool?
-            
-            private enum CodingKeys: String,CodingKey {
-                case name
-                case isHidden = "is_hidden"
-            }
         }
     }
     
-    static let example = Pokemon(abilities: [.init(ability: .init(name: "overgrow", isHidden: false)), .init(ability: .init(name: "chlorophyll", isHidden: true))], id: 1, moves: [.init(move: .init(name: "razor-wind", url: "https://pokeapi.co/api/v2/move/13/"))], types: [.init(slot: 1, type: .init(name: "grass")), .init(slot: 2, type: .init(name: "poison"))], stats: [.init(base_stat: 45, stat: .init(name: "hp")), .init(base_stat: 49, stat: .init(name: "attack"))], name: "bulbasaur", sprites: .init(frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", frontShiny: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png"))
+    func getAbilities() -> [AbilityWrapper] {
+        return abilities.filter{ $0.isHidden == false }
+    }
+    func getHiddenAbilities() -> [AbilityWrapper] {
+        return abilities.filter{ $0.isHidden }
+    }
+    
+    static let example = Pokemon(abilities: [.init(ability: .init(name: "overgrow"), isHidden: false), .init(ability: .init(name: "chlorophyll"), isHidden: true)], id: 1, moves: [.init(move: .init(name: "razor-wind", url: "https://pokeapi.co/api/v2/move/13/"))], types: [.init(slot: 1, type: .init(name: "grass")), .init(slot: 2, type: .init(name: "poison"))], stats: [.init(base_stat: 45, stat: .init(name: "hp")), .init(base_stat: 49, stat: .init(name: "attack"))], name: "bulbasaur", sprites: .init(frontDefault: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", frontShiny: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png"))
 }
